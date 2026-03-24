@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spicy Bites</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #111;
+  color: white;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: black;
+  position: sticky;
+  top: 0;
+}
+
+nav a {
+  color: white;
+  margin: 10px;
+  text-decoration: none;
+}
+
+nav a.active {
+  color: red;
+  border-bottom: 2px solid red;
+}
+
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+  background: url('https://source.unsplash.com/1600x700/?food') no-repeat center/cover;
+}
+
+.btn {
+  background: red;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  margin: 5px;
+  display: inline-block;
+}
+
+section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  background: #222;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 15px;
+  width: 200px;
+  transition: 0.3s;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.card:hover {
+  transform: scale(1.08);
+}
+
+button {
+  margin: 3px;
+  padding: 6px;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+input, textarea {
+  width: 80%;
+  padding: 10px;
+  margin: 5px;
+}
+
+#cart ul {
+  list-style: none;
+  padding: 0;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  background: black;
+}
+
+/* Loader */
+#loader {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Mobile */
+@media(max-width:600px){
+  .cards {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="loader"><h2>Loading...</h2></div>
+
+<header>
+  <h2>🍽️ Spicy Bites</h2>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#menu">Menu</a>
+    <a href="#cart">Cart</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Delicious Food Delivered Fast</h1>
+  <a href="#menu" class="btn">Explore Menu</a>
+  <a href="#" onclick="demoMsg()" class="btn">Order Now</a>
+</section>
+
+<!-- OFFERS -->
+<section>
+  <h2>🔥 Today Offers</h2>
+  <p>Buy 1 Pizza Get 1 Free</p>
+  <p>Free delivery above ₹200</p>
+</section>
+
+<!-- ABOUT -->
+<section>
+  <h2>About Us</h2>
+  <p>Spicy Bites provides fresh and tasty food with fast delivery.</p>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <h2>Our Menu</h2>
+  <input type="text" id="search" placeholder="Search food..." onkeyup="searchFood()">
+  <div class="cards" id="menuItems"></div>
+</section>
+
+<!-- CART -->
+<section id="cart">
+  <h2>Your Cart 🛒</h2>
+  <ul id="cartItems"></ul>
+  <h3>Total: ₹<span id="total">0</span></h3>
+  <button onclick="demoMsg()">Place Order</button>
+</section>
+
+<!-- WHY -->
+<section>
+  <h2>Why Choose Us</h2>
+  <p>✔ Fresh Ingredients</p>
+  <p>✔ Fast Delivery</p>
+  <p>✔ Affordable Prices</p>
+</section>
+
+<!-- REVIEWS -->
+<section>
+  <h2>Customer Reviews</h2>
+  <p>⭐ Best food in town!</p>
+  <p>⭐ Amazing taste!</p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2>Contact Us</h2>
+  <p>📞 9876543210</p>
+
+  <form onsubmit="event.preventDefault(); alert('Message sent!')">
+    <input placeholder="Name" required><br>
+    <input type="email" placeholder="Email" required><br>
+    <textarea placeholder="Message" required></textarea><br>
+    <button>Send</button>
+  </form>
+
+  <iframe src="https://maps.google.com/maps?q=hyderabad&output=embed" width="90%" height="200"></iframe>
+</section>
+
+<footer>
+  <p>© 2026 Spicy Bites</p>
+</footer>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let total = 0;
+
+// ✅ UPDATED MENU (8 ITEMS)
+const menu = [
+  {name:"Burger", price:80, img:"https://source.unsplash.com/200x150/?burger"},
+  {name:"Pizza", price:120, img:"https://source.unsplash.com/200x150/?pizza"},
+  {name:"wrap", price:70, img:"https://source.unsplash.com/200x150/?wrap"},
+  {name:"Coffee", price:20, img:"https://source.unsplash.com/200x150/?coffee"},
+  {name:"French Fries", price:60, img:"https://source.unsplash.com/200x150/?fries"},
+  {name:"Sandwich", price:70, img:"https://source.unsplash.com/200x150/?sandwich"},
+  {name:"Noodles", price:90, img:"https://source.unsplash.com/200x150/?noodles"},
+  {name:"Cool Drink", price:30, img:"https://source.unsplash.com/200x150/?drink"}
+];
+
+function loadMenu() {
+  let container = document.getElementById("menuItems");
+  container.innerHTML = "";
+
+  menu.forEach(item => {
+    container.innerHTML += `
+    <div class="card">
+      <img src="${item.img}">
+      <p>${item.name} - ₹${item.price}</p>
+      <button onclick="addToCart('${item.name}',${item.price})">Add</button>
+    </div>`;
+  });
+}
+
+function addToCart(name, price) {
+  let found = cart.find(i => i.name === name);
+  if(found) found.qty++;
+  else cart.push({name, price, qty:1});
+  updateCart();
+}
+
+function updateCart() {
+  let list = document.getElementById("cartItems");
+  list.innerHTML = "";
+  total = 0;
+
+  cart.forEach((item,i)=>{
+    total += item.price * item.qty;
+
+    list.innerHTML += `
+    <li>
+    ${item.name} 
+    <button onclick="decreaseQty(${i})">➖</button>
+    ${item.qty}
+    <button onclick="increaseQty(${i})">➕</button>
+    = ₹${item.price * item.qty}
+    <button onclick="removeItem(${i})">❌</button>
+    </li>`;
+  });
+
+  document.getElementById("total").innerText = total;
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function increaseQty(i){ cart[i].qty++; updateCart(); }
+
+function decreaseQty(i){
+  if(cart[i].qty>1) cart[i].qty--;
+  else cart.splice(i,1);
+  updateCart();
+}
+
+function removeItem(i){
+  cart.splice(i,1);
+  updateCart();
+}
+
+function searchFood(){
+  let val = document.getElementById("search").value.toLowerCase();
+  document.querySelectorAll(".card").forEach(c=>{
+    c.style.display = c.innerText.toLowerCase().includes(val) ? "block":"none";
+  });
+}
+
+// 🧾 ORDER SUMMARY
+function demoMsg(){
+  if(cart.length===0){
+    alert("Cart is empty!");
+    return;
+  }
+
+  let msg="🧾 Order Summary\n\n";
+  cart.forEach(c=>{
+    msg+=`${c.name} x${c.qty} = ₹${c.price*c.qty}\n`;
+  });
+
+  msg+=`\nTotal: ₹${total}`;
+  alert(msg + "\n\n(Demo Version)");
+}
+
+// LOADER
+window.onload=()=>{
+  document.getElementById("loader").style.display="none";
+};
+
+// NAV ACTIVE
+window.addEventListener("scroll",()=>{
+  let sections=document.querySelectorAll("section");
+  let links=document.querySelectorAll("nav a");
+
+  sections.forEach((sec,i)=>{
+    if(window.scrollY>=sec.offsetTop-100){
+      links.forEach(l=>l.classList.remove("active"));
+      if(links[i]) links[i].classList.add("active");
+    }
+  });
+});
+
+loadMenu();
+updateCart();
+</script>
+
+</body>
+</html>
