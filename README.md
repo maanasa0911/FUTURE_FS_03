@@ -24,6 +24,9 @@ The website includes features like:
    • Order summary
    • Contact form and location
 
+🔗 GitHub Repository:
+https://maanasa0911.github.io/FUTURE_FS_03/
+
 Currently, this is a demo version. In real-world use, it can be integrated with WhatsApp ordering or online payment systems.
 
 Thank you.
